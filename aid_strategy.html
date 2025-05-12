@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Aid Allocation Strategy</title>
+    <link rel="stylesheet" href="/static/style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>Aid Allocation Strategy</h1>
+            <p>Overview of all country classifications and allocations</p>
+        </div>
+        <div class="form-content">
+            <div class="strategy-overview">
+                <div class="overview-card">
+                    <div class="overview-icon">📊</div>
+                    <h2>Global Aid Distribution</h2>
+                    <p>Our aid allocation strategy is based on a needs assessment that prioritizes countries facing the greatest challenges, while ensuring every nation receives appropriate support.</p>
+                </div>
+                
+                <div class="allocation-strategy">
+                    <div class="strategy-title">Aid Allocation Methodology</div>
+                    <div class="strategy-explanation">
+                        The allocation methodology uses weighted priority scores based on country needs. High-need countries receive a priority weight of 3, medium-need countries receive 2, and low-need countries receive 1. This ensures an equitable distribution of our $10 million aid budget.
+                    </div>
+                </div>
+            </div>
+            
+            <div class="cluster-cards">
+                {% for row in cluster_table %}
+                <div class="cluster-strategy-card 
+                    {% if row.category == 'Low Need' %}low-need-card
+                    {% elif row.category == 'Medium Need' %}medium-need-card
+                    {% else %}high-need-card{% endif %}">
+                    <div class="cluster-header">
+                        {% if row.category == "Low Need" %}
+                        <span class="cluster-badge cluster-low">{{ row.category }}</span>
+                        {% elif row.category == "Medium Need" %}
+                        <span class="cluster-badge cluster-medium">{{ row.category }}</span>
+                        {% else %}
+                        <span class="cluster-badge cluster-high">{{ row.category }}</span>
+                        {% endif %}
+                        <div class="cluster-number">Cluster {{ row.cluster }}</div>
+                    </div>
+                    <div class="cluster-allocation">
+                        {% if row.cluster == 0 %}
+                        <div class="allocation-number">10%</div>
+                        <div class="allocation-amount">$23,255.81 per country</div>
+                        {% elif row.cluster == 1 %}
+                        <div class="allocation-number">30%</div>
+                        <div class="allocation-amount">$28,571.43 per country</div>
+                        {% else %}
+                        <div class="allocation-number">60%</div>
+                        <div class="allocation-amount">$127,659.57 per country</div>
+                        {% endif %}
+                    </div>
+                    <div class="cluster-description">
+                        {{ row.description }}
+                    </div>
+                    <a href="/cluster_details/{{ row.cluster }}" class="cluster-details-link">View Details</a>
+                </div>
+                {% endfor %}
+            </div>
+            
+            <div class="allocation-table-container">
+                <h3 class="section-title">Complete Allocation Breakdown</h3>
+                <table class="allocation-table">
+                    <thead>
+                        <tr>
+                            <th>Cluster</th>
+                            <th>Category</th>
+                            <th>Countries</th>
+                            <th>Priority</th>
+                            <th>Weighted Need</th>
+                            <th>Allocation (%)</th>
+                            <th>Total ($)</th>
+                            <th>Per Country ($)</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr class="high-row">
+                            <td>Cluster 2</td>
+                            <td><span class="cluster-high">High Need</span></td>
+                            <td>47</td>
+                            <td>3</td>
+                            <td>141</td>
+                            <td>60%</td>
+                            <td>$6,000,000</td>
+                            <td>$127,659.57</td>
+                        </tr>
+                        <tr class="medium-row">
+                            <td>Cluster 1</td>
+                            <td><span class="cluster-medium">Medium Need</span></td>
+                            <td>105</td>
+                            <td>2</td>
+                            <td>210</td>
+                            <td>30%</td>
+                            <td>$3,000,000</td>
+                            <td>$28,571.43</td>
+                        </tr>
+                        <tr class="low-row">
+                            <td>Cluster 0</td>
+                            <td><span class="cluster-low">Low Need</span></td>
+                            <td>43</td>
+                            <td>1</td>
+                            <td>43</td>
+                            <td>10%</td>
+                            <td>$1,000,000</td>
+                            <td>$23,255.81</td>
+                        </tr>
+                        <tr>
+                            <td colspan="3"><strong>Total</strong></td>
+                            <td>—</td>
+                            <td>394</td>
+                            <td>100%</td>
+                            <td>$10,000,000</td>
+                            <td>—</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            
+            <div class="nav-links">
+                <a href="/" class="action-button">
+                    <span class="button-icon">↩</span>
+                    Back to Prediction
+                </a>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Country Aid Allocation Predictor</title>
+    <link rel="stylesheet" href="/static/style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>Country Aid Allocation</h1>
+            <p>Enter country data to predict aid cluster and allocation percentage</p>
+        </div>
+        <div class="form-content">
+            {% if error_message %}
+            <div class="error-message">
+                <div class="error-icon">⚠️</div>
+                <div class="error-text">{{ error_message }}</div>
+            </div>
+            {% endif %}
+
+            <div class="intro-card">
+                <div class="card-icon">🌍</div>
+                <div class="intro-content">
+                    <h2>Predict Aid Requirements</h2>
+                    <p>Our AI model analyzes country data to determine appropriate aid allocation. Complete the form below with accurate information for the best results.</p>
+                </div>
+            </div>
+
+            <form action="/predict" method="post" class="prediction-form">
+                <div class="form-grid">
+                    <div class="input-group">
+                        <label for="country">Country Name</label>
+                        <input type="text" id="country" name="country" placeholder="Enter country name" required>
+                    </div>
+                    
+                    <div class="input-group">
+                        <label for="health">Health Index</label>
+                        <div class="input-with-help">
+                            <input type="text" id="health" name="health" placeholder="Enter health index (0-100)" required>
+                            <div class="help-tooltip" title="Health index measures overall public health quality (0-100)">?</div>
+                        </div>
+                    </div>
+                    
+                    <div class="input-group">
+                        <label for="income">Income (GDP per capita)</label>
+                        <div class="input-with-help">
+                            <input type="text" id="income" name="income" placeholder="Enter income in USD" required>
+                            <div class="help-tooltip" title="Average annual income per person in USD">?</div>
+                        </div>
+                    </div>
+                    
+                    <div class="input-group">
+                        <label for="life_expec">Life Expectancy</label>
+                        <div class="input-with-help">
+                            <input type="text" id="life_expec" name="life_expec" placeholder="Enter life expectancy in years" required>
+                            <div class="help-tooltip" title="Average life expectancy in years">?</div>
+                        </div>
+                    </div>
+                    
+                    <div class="input-group">
+                        <label for="total_fer">Total Fertility Rate</label>
+                        <div class="input-with-help">
+                            <input type="text" id="total_fer" name="total_fer" placeholder="Enter total fertility rate" required>
+                            <div class="help-tooltip" title="Average number of children born to a woman during her lifetime">?</div>
+                        </div>
+                    </div>
+                    
+                    <div class="input-group">
+                        <label for="health_per_capita">Health Expenditure Per Capita</label>
+                        <div class="input-with-help">
+                            <input type="text" id="health_per_capita" name="health_per_capita" placeholder="Enter health spending per capita" required>
+                            <div class="help-tooltip" title="Annual healthcare spending per person in USD">?</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="form-footer">
+                    <button class="btn primary-btn" type="submit">
+                        <span class="btn-icon">✓</span>
+                        Predict Allocation
+                    </button>
+                    <button class="btn secondary-btn" type="reset">
+                        <span class="btn-icon">↺</span>
+                        Reset Form
+                    </button>
+                </div>
+            </form>
+            
+            <div class="info-cards">
+                <div class="info-card">
+                    <div class="info-card-icon">📊</div>
+                    <h3>Data-Driven Decisions</h3>
+                    <p>Our model uses machine learning to analyze key development indicators and provide fair aid allocations.</p>
+                </div>
+                
+                <div class="info-card">
+                    <div class="info-card-icon">🔍</div>
+                    <h3>Transparent Methodology</h3>
+                    <p>View our allocation strategy, cluster definitions, and priority weighting system.</p>
+                </div>
+                
+                <div class="info-card">
+                    <div class="info-card-icon">📈</div>
+                    <h3>Resource Optimization</h3>
+                    <p>Maximize impact by allocating more resources to countries with the greatest need.</p>
+                </div>
+            </div>
+            
+            <div class="nav-links">
+                <a href="/aid_strategy" class="action-button">
+                    <span class="button-icon">📋</span>
+                    Aid Strategy Information
+                </a>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        // Add tooltip functionality
+        const tooltips = document.querySelectorAll('.help-tooltip');
+        tooltips.forEach(tooltip => {
+            tooltip.addEventListener('mouseenter', function() {
+                const tooltipText = document.createElement('div');
+                tooltipText.className = 'tooltip-text';
+                tooltipText.textContent = this.getAttribute('title');
+                this.appendChild(tooltipText);
+            });
+            
+            tooltip.addEventListener('mouseleave', function() {
+                const tooltipText = this.querySelector('.tooltip-text');
+                if (tooltipText) {
+                    tooltipText.remove();
+                }
+            });
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Prediction Results</title>
+    <link rel="stylesheet" href="/static/style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>Prediction Results for {{ country_name }}</h1>
+            <p>Country aid allocation analysis</p>
+        </div>
+        <div class="form-content">
+            <div class="result-section">
+                <div class="card-grid">
+                    <div class="result-card">
+                        <div class="card-header">
+                            <div class="card-icon">📊</div>
+                            <h2>Classification</h2>
+                        </div>
+                        <div class="card-body">
+                            {% if label == "Low Need" %}
+                            <div class="classification cluster-low">{{ label }}</div>
+                            {% elif label == "Medium Need" %}
+                            <div class="classification cluster-medium">{{ label }}</div>
+                            {% else %}
+                            <div class="classification cluster-high">{{ label }}</div>
+                            {% endif %}
+                            <div class="sub-info">Based on input data analysis</div>
+                        </div>
+                    </div>
+                    
+                    <div class="result-card">
+                        <div class="card-header">
+                            <div class="card-icon">📈</div>
+                            <h2>Aid Allocation</h2>
+                        </div>
+                        <div class="card-body">
+                            <div class="allocation-percentage">{{ allocation }}%</div>
+                            <div class="sub-info">of total aid budget</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Allocation Amount Card -->
+                <div class="allocation-details">
+                    <div class="strategy-title">Allocated Aid Amount</div>
+                    {% if label == "High Need" %}
+                    <div class="allocation-amount">${{ "{:,.2f}".format(127659.57) }}</div>
+                    {% elif label == "Medium Need" %}
+                    <div class="allocation-amount">${{ "{:,.2f}".format(28571.43) }}</div>
+                    {% else %}
+                    <div class="allocation-amount">${{ "{:,.2f}".format(23255.81) }}</div>
+                    {% endif %}
+                    <div class="allocation-note">Based on {{ label }} cluster allocation strategy</div>
+                </div>
+                
+                <div class="data-section">
+                    <h3>Input Data Summary</h3>
+                    <div class="input-summary">
+                        <div class="data-grid">
+                            <div class="data-item">
+                                <div class="data-label">Health Index</div>
+                                <div class="data-value">{{ input_data.health }}</div>
+                            </div>
+                            <div class="data-item">
+                                <div class="data-label">Income (GDP per capita)</div>
+                                <div class="data-value">${{ "{:,.2f}".format(input_data.income) }}</div>
+                            </div>
+                            <div class="data-item">
+                                <div class="data-label">Life Expectancy</div>
+                                <div class="data-value">{{ input_data.life_expec }} years</div>
+                            </div>
+                            <div class="data-item">
+                                <div class="data-label">Total Fertility Rate</div>
+                                <div class="data-value">{{ input_data.total_fer }}</div>
+                            </div>
+                            <div class="data-item">
+                                <div class="data-label">Health Expenditure Per Capita</div>
+                                <div class="data-value">${{ "{:,.4f}".format(input_data.health_per_capita) }}</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="chart-section">
+                    <h3>Aid Allocation Strategy</h3>
+                    <div id="chart" class="chart-container"></div>
+                </div>
+                
+                <script>
+                var clusterColor = '';
+                {% if label == "Low Need" %}
+                    clusterColor = '#43a047';
+                {% elif label == "Medium Need" %}
+                    clusterColor = '#fb8c00';
+                {% else %}
+                    clusterColor = '#e53935';
+                {% endif %}
+                
+                var data = [{
+                    values: [{{ allocation }}, {{ 100 - allocation }}],
+                    labels: ['{{ country_name }} ({{ label }})', 'Remaining Budget'],
+                    type: 'pie',
+                    marker: {
+                        colors: [clusterColor, '#e1e5ee']
+                    },
+                    hole: 0.6,
+                    textinfo: 'label+percent',
+                    textposition: 'outside',
+                    insidetextorientation: 'horizontal'
+                }];
+                
+                var layout = {
+                    showlegend: false,
+                    height: 350,
+                    margin: {t: 10, b: 10, l: 10, r: 10},
+                    annotations: [{
+                        font: {size: 20},
+                        showarrow: false,
+                        text: '{{ allocation }}%',
+                        x: 0.5,
+                        y: 0.5
+                    }]
+                };
+                
+                var config = {
+                    responsive: true,
+                    displayModeBar: false
+                };
+                
+                Plotly.newPlot('chart', data, layout, config);
+                </script>
+                
+                <!-- New Allocation Strategy Section -->
+                <div class="allocation-strategy">
+                    <div class="strategy-title">Global Aid Allocation Strategy</div>
+                    <div class="strategy-explanation">
+                        Our aid allocation strategy prioritizes countries based on need classification. 
+                        Resources are distributed with a weighted formula that ensures high-need countries 
+                        receive the largest share of available funding.
+                    </div>
+                    
+                    <table class="allocation-table">
+                        <thead>
+                            <tr>
+                                <th>Cluster</th>
+                                <th>Category</th>
+                                <th>Countries</th>
+                                <th>Priority</th>
+                                <th>Allocation (%)</th>
+                                <th>Total ($)</th>
+                                <th>Per Country ($)</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr class="high-row">
+                                <td>Cluster 2</td>
+                                <td><span class="cluster-high">High Need</span></td>
+                                <td>47</td>
+                                <td>3</td>
+                                <td>60%</td>
+                                <td>$6,000,000</td>
+                                <td>$127,659.57</td>
+                            </tr>
+                            <tr class="medium-row">
+                                <td>Cluster 1</td>
+                                <td><span class="cluster-medium">Medium Need</span></td>
+                                <td>105</td>
+                                <td>2</td>
+                                <td>30%</td>
+                                <td>$3,000,000</td>
+                                <td>$28,571.43</td>
+                            </tr>
+                            <tr class="low-row">
+                                <td>Cluster 0</td>
+                                <td><span class="cluster-low">Low Need</span></td>
+                                <td>43</td>
+                                <td>1</td>
+                                <td>10%</td>
+                                <td>$1,000,000</td>
+                                <td>$23,255.81</td>
+                            </tr>
+                            <tr>
+                                <td colspan="2"><strong>Total</strong></td>
+                                <td>195</td>
+                                <td>—</td>
+                                <td>100%</td>
+                                <td>$10,000,000</td>
+                                <td>—</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            
+            <div class="nav-links">
+                <a href="/" class="action-button">
+                    <span class="button-icon">↩</span>
+                    Run New Prediction
+                </a>
+                <a href="/cluster_details/{{ cluster }}" class="action-button">
+                    <span class="button-icon">🔍</span>
+                    Cluster Details
+                </a>
+                <a href="/aid_strategy" class="action-button">
+                    <span class="button-icon">📊</span>
+                    View All Strategies
+                </a>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

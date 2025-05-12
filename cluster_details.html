@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cluster Details - {{ details.name }}</title>
+    <link rel="stylesheet" href="/static/style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            {% if details.name == "Low Need" %}
+            <h1 class="cluster-low">{{ details.name }} Cluster</h1>
+            {% elif details.name == "Medium Need" %}
+            <h1 class="cluster-medium">{{ details.name }} Cluster</h1>
+            {% else %}
+            <h1 class="cluster-high">{{ details.name }} Cluster</h1>
+            {% endif %}
+            <p>Detailed information and aid recommendations</p>
+        </div>
+        <div class="form-content">
+            <div class="cluster-info-section">
+                <!-- Summary Cards -->
+                <div class="card-grid">
+                    <div class="result-card">
+                        <div class="card-header">
+                            <div class="card-icon">📊</div>
+                            <h2>Allocation</h2>
+                        </div>
+                        <div class="card-body">
+                            <div class="allocation-percentage">{{ details.allocation }}%</div>
+                            <div class="sub-info">of total aid budget</div>
+                        </div>
+                    </div>
+                    
+                    <div class="result-card">
+                        <div class="card-header">
+                            <div class="card-icon">💰</div>
+                            <h2>Per Country</h2>
+                        </div>
+                        <div class="card-body">
+                            <div class="allocation-percentage">${{ "{:,.2f}".format(details.allocation_amount) }}</div>
+                            <div class="sub-info">allocation per country</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="cluster-card">
+                    <h3 class="section-title">Overview</h3>
+                    <div class="section-content">
+                        <p>{{ details.description }}</p>
+                    </div>
+                </div>
+                
+                <div class="cluster-card">
+                    <h3 class="section-title">Key Characteristics</h3>
+                    <div class="section-content">
+                        <ul class="feature-list">
+                            {% for characteristic in details.characteristics %}
+                            <li>{{ characteristic }}</li>
+                            {% endfor %}
+                        </ul>
+                    </div>
+                </div>
+                
+                <div class="cluster-card">
+                    <h3 class="section-title">Example Countries</h3>
+                    <div class="section-content">
+                        <div class="example-countries">
+                            {% for country in details.example_countries %}
+                            <span class="country-tag">{{ country }}</span>
+                            {% endfor %}
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="cluster-card">
+                    <h3 class="section-title">Recommended Aid Focus</h3>
+                    <div class="section-content">
+                        <ul class="feature-list">
+                            {% for aid in details.recommended_aid %}
+                            <li>{{ aid }}</li>
+                            {% endfor %}
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="nav-links">
+                <a href="/" class="action-button">
+                    <span class="button-icon">↩</span>
+                    Run New Prediction
+                </a>
+                <a href="/aid_strategy" class="action-button">
+                    <span class="button-icon">📊</span>
+                    View All Clusters
+                </a>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
